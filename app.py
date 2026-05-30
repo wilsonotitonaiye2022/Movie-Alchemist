@@ -506,9 +506,45 @@ with tab3:
 
 with tab4:
 
-    q = st.text_input("Ask about movies")
+    st.subheader("💬 Ask the Netflix AI Assistant")
 
-    if q and q.strip():
+    # =========================================================
+    # SESSION CHAT MEMORY
+    # =========================================================
+
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    
+    if "selected_query" not in st.session_state:
+        st.session_state.selected_query = ""
+
+    # =========================================================
+    # QUICK SUGGESTION BUTTONS
+    # =========================================================
+
+    col1, col2, col3 = st.columns(3)
+
+    if col1.button("Best thriller movies"):
+        st.session_state.selected_query = "Best thriller movies"
+
+    if col2.button("Hidden gems on Netflix"):
+        st.session_state.selected_query = "Hidden gems on Netflix"
+
+    if col3.button("What should I watch tonight?"):
+        st.session_state.selected_query = "What should I watch tonight?"
+
+    
+    q = st.text_input("Ask about movies",value=st.session_state.selected_query)
+
+    ask = st.button("🔎 Ask Netflix AI")
+
+    # =========================================================
+    # RUN CHAT QUERY
+    # =========================================================
+
+    if ask and q and q.strip():
+
+        st.session_state.selected_query = ""
 
         results = semantic_search(
             query=q,
@@ -521,34 +557,89 @@ with tab4:
         context = "\n\n".join(
             [
                 f"""
-    Title: {r.get('title', '')}
+Title: {r.get('title', '')}
 
-    Genre: {r.get('genre', '')}
+Genre: {r.get('genre', '')}
 
-    IMDb Rating: {r.get('imdb_rating', '')}
+IMDb Rating: {r.get('imdb_rating', '')}
 
-    Plot:
-    {r.get('plot', '')}
-    """
+Plot:
+{r.get('plot', '')}
+"""
                 for r in results
             ]
         )
 
         prompt = f"""
-    You are a Netflix assistant.
+You are a Netflix assistant.
 
-    Use the provided catalog context.
+Use the provided catalog context to answer clearly and concisely.
 
-    Context:
-    {context}
+Context:
+{context}
 
-    Question:
-    {q}
-    """
+User Question:
+{q}
+"""
 
-        response = safe_invoke(
-            llm,
-            prompt
+        response = safe_invoke(llm, prompt)
+
+        # Store in memory
+        st.session_state.chat_history.append(
+            {"role": "user", "content": q}
+        )
+        st.session_state.chat_history.append(
+            {"role": "assistant", "content": response}
         )
 
-        st.write(response)
+    # =========================================================
+    # DISPLAY CHAT HISTORY (NETFLIX STYLE)
+    # =========================================================
+
+    st.markdown("---")
+    st.subheader("🧠 Conversation")
+
+    for msg in st.session_state.chat_history:
+
+        if msg["role"] == "user":
+            st.markdown(
+                f"""
+                <div style="
+                    background:#E50914;
+                    color:white;
+                    padding:10px;
+                    border-radius:10px;
+                    margin:5px 0;
+                    max-width:80%;
+                ">
+                <b>You:</b> {msg['content']}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        else:
+            st.markdown(
+                f"""
+                <div style="
+                    background:#222;
+                    color:white;
+                    padding:10px;
+                    border-radius:10px;
+                    margin:5px 0;
+                    max-width:80%;
+                ">
+                <b>Netflix AI:</b> {msg['content']}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+    # =========================================================
+    # CLEAR CHAT
+    # =========================================================
+
+    if st.button("🧹 Clear Chat"):
+        st.session_state.chat_history = []
+        st.rerun()
+
