@@ -1,0 +1,5 @@
+{
+  "dataset_hash": "d4c6ee9671603abcbdb950d84293bca3",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "fallback_model": "text-embedding-3-small"
+}
