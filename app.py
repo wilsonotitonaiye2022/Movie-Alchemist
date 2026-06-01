@@ -427,12 +427,97 @@ with tab1:
 
 with tab2:
 
-    a = st.selectbox("Show A", df["title"])
-    b = st.selectbox("Show B", df["title"])
+    st.subheader("🚀 Greenlight Studio")
 
-    if st.button("Generate Pitch"):
+    a = st.selectbox(
+        "Show A",
+        df["title"],
+        key="show_a"
+    )
 
-        state = {"a": a, "b": b}
+    b = st.selectbox(
+        "Show B",
+        df["title"],
+        key="show_b"
+    )
+
+    # --------------------------------------------------------
+    # GET SELECTED MOVIES
+    # --------------------------------------------------------
+
+    movie_a = df[df["title"] == a].iloc[0]
+    movie_b = df[df["title"] == b].iloc[0]
+
+    # --------------------------------------------------------
+    # DISPLAY MOVIE CARDS
+    # --------------------------------------------------------
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.markdown("### 🎬 Show A")
+
+        poster_url = movie_a.get("poster", None)
+
+        if pd.notna(poster_url) and str(poster_url).strip():
+            st.image(
+                poster_url,
+                width=300,
+                use_container_width=True
+            )
+        else:
+            st.info("No poster available")
+
+        st.markdown(f"#### {movie_a['title']}")
+
+        if "imdb_rating" in movie_a.index:
+            st.write(f"⭐ IMDb Rating: {movie_a['imdb_rating']}")
+
+        if "genre" in movie_a.index:
+            st.write(f"🎭 Genre: {movie_a['genre']}")
+
+        if "release_year" in movie_a.index:
+            st.write(f"📅 Year: {movie_a['release_year']}")
+
+    with col2:
+
+        st.markdown("### 🎬 Show B")
+
+        poster_url = movie_b.get("poster", None)
+
+        if pd.notna(poster_url) and str(poster_url).strip():
+            st.image(
+                poster_url,
+                width=300,
+                use_container_width=True
+            )
+        else:
+            st.info("No poster available")
+
+        st.markdown(f"#### {movie_b['title']}")
+
+        if "imdb_rating" in movie_b.index:
+            st.write(f"⭐ IMDb Rating: {movie_b['imdb_rating']}")
+
+        if "genre" in movie_b.index:
+            st.write(f"🎭 Genre: {movie_b['genre']}")
+
+        if "release_year" in movie_b.index:
+            st.write(f"📅 Year: {movie_b['release_year']}")
+
+    st.markdown("---")
+
+    # --------------------------------------------------------
+    # GENERATE PITCH
+    # --------------------------------------------------------
+
+    if st.button("🚀 Generate Pitch"):
+
+        state = {
+            "a": a,
+            "b": b
+        }
 
         state = pitch_node(state)
         state = market_node(state)
@@ -441,13 +526,26 @@ with tab2:
 
         confidence = compute_confidence(used)
 
-        st.subheader("🎬 Pitch")
-        st.write(state["pitch"]["concept"])
+        st.subheader("🎬 Generated Pitch")
 
-        st.subheader("📊 Market")
-        st.write(state["market"])
+        st.write(
+            state["pitch"]["concept"]
+        )
 
-        st.metric("Confidence", f"{confidence}%")
+        st.subheader("📊 Market Analysis")
+
+        st.write(
+            state["market"]
+        )
+
+        st.metric(
+            "Confidence",
+            f"{confidence}%"
+        )
+
+        # ----------------------------------------------------
+        # PDF EXPORT
+        # ----------------------------------------------------
 
         pdf = create_pitch_pdf(
             pitch=state["pitch"],
@@ -457,11 +555,49 @@ with tab2:
         )
 
         st.download_button(
-            "📄 Download Pitch PDF",
-            pdf,
+            label="📄 Download Pitch PDF",
+            data=pdf,
             file_name="pitch.pdf",
             mime="application/pdf"
         )
+
+# with tab2:
+
+#     a = st.selectbox("Show A", df["title"])
+#     b = st.selectbox("Show B", df["title"])
+
+#     if st.button("Generate Pitch"):
+
+#         state = {"a": a, "b": b}
+
+#         state = pitch_node(state)
+#         state = market_node(state)
+
+#         used = df[df["title"].isin([a, b])]
+
+#         confidence = compute_confidence(used)
+
+#         st.subheader("🎬 Pitch")
+#         st.write(state["pitch"]["concept"])
+
+#         st.subheader("📊 Market")
+#         st.write(state["market"])
+
+#         st.metric("Confidence", f"{confidence}%")
+
+#         pdf = create_pitch_pdf(
+#             pitch=state["pitch"],
+#             market_summary=state["market"],
+#             success_probability=80,
+#             confidence=confidence
+#         )
+
+#         st.download_button(
+#             "📄 Download Pitch PDF",
+#             pdf,
+#             file_name="pitch.pdf",
+#             mime="application/pdf"
+#         )
 
 # ============================================================
 # TAB 3 — WATCH PLANNER
