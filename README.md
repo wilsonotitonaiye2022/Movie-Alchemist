@@ -280,9 +280,9 @@ Contains:
 ### Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/cinematic-alchemist-pro.git
+git clone https://github.com/wilsonotitonaiye2022/Movie-Alchemist.git
 
-cd cinematic-alchemist-pro
+cd Movie-Alchemist
 ```
 
 ### Create Virtual Environment
