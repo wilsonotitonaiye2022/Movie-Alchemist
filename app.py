@@ -506,7 +506,7 @@ with tab3:
 
 with tab4:
 
-    st.subheader("💬 Ask the Netflix AI Assistant")
+    st.subheader("💬 Ask the AI Assistant")
 
     # =========================================================
     # SESSION CHAT MEMORY
@@ -536,7 +536,7 @@ with tab4:
     
     q = st.text_input("Ask about movies",value=st.session_state.selected_query)
 
-    ask = st.button("🔎 Ask Netflix AI")
+    ask = st.button("🔎 Ask AI Assistant")
 
     # =========================================================
     # RUN CHAT QUERY
@@ -629,7 +629,7 @@ User Question:
                     margin:5px 0;
                     max-width:80%;
                 ">
-                <b>Netflix AI:</b> {msg['content']}
+                <b>AI Assistant:</b> {msg['content']}
                 </div>
                 """,
                 unsafe_allow_html=True
