@@ -2,7 +2,7 @@
 
 An AI-powered movie discovery, recommendation, and content ideation platform built with **Streamlit**, **LangGraph**, **LLMs**, and **Semantic Search**.
 
-The Cinematic Alchemist Pro transforms a traditional movie catalogue into an intelligent streaming assistant capable of:
+[The Cinematic Alchemist Pro](https://movie-alchemist-mcx9qxadiira82bgsdicjg.streamlit.app/) transforms a traditional movie catalogue into an intelligent streaming assistant capable of:
 
 * Understanding viewer moods and "vibes"
 * Generating personalised recommendations
@@ -76,7 +76,7 @@ Example themes:
 
 ---
 
-### 💬 Netflix AI Assistant (RAG)
+### 💬 AI Assistant (RAG)
 
 Conversational movie exploration powered by Retrieval-Augmented Generation.
 
