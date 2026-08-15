@@ -18,7 +18,7 @@ MAX_MARKET_SEARCH_RESULTS = 5
 
 DEFAULT_TEMPERATURE = 0.7
 
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "qwen/qwen3.6-27b" #"llama-3.3-70b-versatile"
 
 OPENROUTER_MODEL = (
     "meta-llama/llama-3.3-70b-instruct"
